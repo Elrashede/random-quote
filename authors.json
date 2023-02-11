@@ -1,0 +1,25 @@
+{
+    "authors": [
+        {
+            "id": 21,
+            "author": "Stephen Covey",
+            "quoteIds": [
+                23
+            ]
+        },
+        {
+            "id": 22,
+            "author": "Ahmed Elrashidy",
+            "quoteIds": [
+                24,26
+            ]
+        },
+        {
+            "id": 23,
+            "author": "Ahmed Ali",
+            "quoteIds": [
+                25
+            ]
+        }
+    ]
+}
