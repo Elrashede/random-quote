@@ -1,6 +1,14 @@
 from flask import Flask
 import json
+import xlsxwriter
+import xlwt
+import xlrd
+from xlutils.copy import copy
+import openpyxl
+from openpyxl import load_workbook
 from random import randint
+import pandas as pd
+
 
 app=Flask(__name__)
 
@@ -10,20 +18,23 @@ def random_qoute():
     with open('quotes.json') as rq:
         data = json.load(rq)
         qoute = data["quotes"]
-        #list of dictionary
-        my_list =[]
-        for i in range(len(qoute)):
-            id=data["quotes"][i]["id"]
-            my_list.append({"id":id,"count":0})
-        
+        quoteLen=len(data["quotes"])
+       
         random_index = randint(0, len(qoute)-1)
         randomQuote=data["quotes"][random_index]
         quoteId=randomQuote["id"]
+
+         #open excel file and update count value
+        # reading excel file 
         
-        for i in range(len(qoute)):
-            if quoteId == my_list[i]["id"]:
-                my_list[i]["count"]+=1
-        print(my_list)
+        workbook = xlrd.open_workbook('Quotes Report.xlsx')
+        sheet = workbook.sheet_by_index(0) 
+        cell_value = sheet.cell_value(1, 2)
+        for i in range(quoteLen):
+           if quoteId == cell_value:
+            sheet.write(2, 2,2 )
+            print("done")
+            workbook.save(filename="Quotes Report.xlsx")
         return randomQuote
 
 #find quote if i have the id;
@@ -56,12 +67,32 @@ def quote_details():
                 result["quote"]=search_quote(quoteID)
                 result["author"]=authors[i]["author"]
                 return result
-                
-                       
-@app.route('/quote/random')
+
+# create Excel File and add column , run once       
+# def create_Excel():
+#     workbook2 = xlwt.Workbook() 
+#     sheet = workbook2.add_sheet('Quotes Report') 
+#     sheet.write(0,0, 'Quote ID')
+#     sheet.write(0,1, 'Count')
+#     with open('quotes.json') as rq:
+#         data = json.load(rq)
+#         qoute = data["quotes"]
+#         my_list =[]
+#         for i in range(len(qoute)):
+#             id=data["quotes"][i]["id"]
+#             my_list.append({"id":id,"count":0})
+#     for i in range(len(my_list)):                                          
+#         sheet.write(i+1, 0, my_list[i]["id"])                                 
+#         sheet.write(i+1, 1, my_list[i]["count"])       
+#         workbook2.save('Quotes Report.xlsx')
+    
+    
+
+@app.route('/quote/random',methods=['GET'])
 def index():
     return quote_details()
 
 if __name__=="__main__":
+    # create_Excel()
     app.run(debug=True)
 
