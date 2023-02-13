@@ -8,10 +8,10 @@ import openpyxl
 from openpyxl import load_workbook
 from random import randint
 import pandas as pd
-
+from flask_cors import CORS
 
 app=Flask(__name__)
-
+CORS(app)
 # f = open("quotes.json", "r")
 #open file quotes and get random quote.
 def random_qoute():
