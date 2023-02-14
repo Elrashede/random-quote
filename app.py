@@ -1,14 +1,16 @@
 from flask import Flask
 import json
-import xlsxwriter
-import xlwt
 import xlrd
-from xlutils.copy import copy
-import openpyxl
-from openpyxl import load_workbook
+import xlwt
+import openpyxl as ox
+from openpyxl import Workbook, load_workbook
+from openpyxl.utils import get_column_letter
 from random import randint
 import pandas as pd
 from flask_cors import CORS
+import datetime
+import win32com.client as win32
+from win32com.client import Dispatch
 
 app=Flask(__name__)
 CORS(app)
@@ -25,16 +27,20 @@ def random_qoute():
         quoteId=randomQuote["id"]
 
          #open excel file and update count value
-        # reading excel file 
-        
-        workbook = xlrd.open_workbook('Quotes Report.xlsx')
-        sheet = workbook.sheet_by_index(0) 
-        cell_value = sheet.cell_value(1, 2)
-        for i in range(quoteLen):
-           if quoteId == cell_value:
-            sheet.write(2, 2,2 )
-            print("done")
-            workbook.save(filename="Quotes Report.xlsx")
+        wb = xlrd.open_workbook('Quotes Report.xlsx')
+        # wb2=ox.load_workbook('Quotes Report.xlsx')
+        sheet = wb.sheet_by_name('Quotes Report')
+        for i in range(sheet.nrows):         
+             row = sheet.row_values(i)       
+             for cell in row:
+                if cell== quoteId:
+                   row[1]+=1
+                   print(row)  
+                   print(row[1])       
+                   print("done")
+        # wb.save("Quotes Report.xlsx")  it didn't save after update 
+        # writer = pd.ExcelWriter('Quotes Report.xlsx', engine='openpyxl', mode='a')
+        # print(writer)
         return randomQuote
 
 #find quote if i have the id;
@@ -85,14 +91,15 @@ def quote_details():
 #         sheet.write(i+1, 0, my_list[i]["id"])                                 
 #         sheet.write(i+1, 1, my_list[i]["count"])       
 #         workbook2.save('Quotes Report.xlsx')
+       
     
     
 
 @app.route('/quote/random',methods=['GET'])
 def index():
+    # create_Excel()
     return quote_details()
 
 if __name__=="__main__":
-    # create_Excel()
     app.run(debug=True)
 
