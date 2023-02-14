@@ -2,13 +2,14 @@ from flask import Flask
 import json
 import xlrd
 import xlwt
-import openpyxl as ox
+import openpyxl
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 from random import randint
 import pandas as pd
 from flask_cors import CORS
 import datetime
+from datetime import datetime
 import win32com.client as win32
 from win32com.client import Dispatch
 
@@ -27,20 +28,20 @@ def random_qoute():
         quoteId=randomQuote["id"]
 
          #open excel file and update count value
-        wb = xlrd.open_workbook('Quotes Report.xlsx')
-        # wb2=ox.load_workbook('Quotes Report.xlsx')
-        sheet = wb.sheet_by_name('Quotes Report')
-        for i in range(sheet.nrows):         
-             row = sheet.row_values(i)       
-             for cell in row:
-                if cell== quoteId:
-                   row[1]+=1
-                   print(row)  
-                   print(row[1])       
-                   print("done")
-        # wb.save("Quotes Report.xlsx")  it didn't save after update 
-        # writer = pd.ExcelWriter('Quotes Report.xlsx', engine='openpyxl', mode='a')
-        # print(writer)
+        # wb = xlrd.open_workbook('Quotes Report.xlsx')
+        wb2=openpyxl.load_workbook('Quotes Report_Res2.xlsx')
+        sheets = wb2.sheetnames
+        sheet=wb2[sheets[0]]
+        for i in range(len(qoute)):
+            if quoteId==sheet.cell(row=i+2,column=1).value:
+                sheet.cell(row=i+2,column=2).value+=1 
+        # print(wb2) 
+        now=datetime.now()
+        print(now)
+        # convert datetime obj to string
+        # current_datetime = str(now)
+        # fileName=current_datetime+'.xlsx'
+        wb2.save('Quotes Report_Res2.xlsx')   #it saves only one if not change name after update 
         return randomQuote
 
 #find quote if i have the id;
@@ -76,10 +77,13 @@ def quote_details():
 
 # create Excel File and add column , run once       
 # def create_Excel():
-#     workbook2 = xlwt.Workbook() 
-#     sheet = workbook2.add_sheet('Quotes Report') 
-#     sheet.write(0,0, 'Quote ID')
-#     sheet.write(0,1, 'Count')
+#     wb = load_workbook('Quotes Report_new.xlsx') 
+#     sheets = wb.sheetnames
+    
+#     sheet=wb[sheets[0]]
+#     sheet.cell(row=1,column=1).value="id"
+#     sheet.cell(row=1,column=2).value="Count"
+   
 #     with open('quotes.json') as rq:
 #         data = json.load(rq)
 #         qoute = data["quotes"]
@@ -88,9 +92,9 @@ def quote_details():
 #             id=data["quotes"][i]["id"]
 #             my_list.append({"id":id,"count":0})
 #     for i in range(len(my_list)):                                          
-#         sheet.write(i+1, 0, my_list[i]["id"])                                 
-#         sheet.write(i+1, 1, my_list[i]["count"])       
-#         workbook2.save('Quotes Report.xlsx')
+#          sheet.cell(row=i+2,column=1).value=my_list[i]["id"]                                      
+#          sheet.cell(row=i+2,column=2).value=0      
+#     wb.save('Quotes Report_Res.xlsx')
        
     
     
