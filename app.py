@@ -32,18 +32,27 @@ def random_qoute():
         wb2=openpyxl.load_workbook('Quotes Report_Res2.xlsx')
         sheets = wb2.sheetnames
         sheet=wb2[sheets[0]]
+        #count to determine total calls
+        totalCount=0
         for i in range(len(qoute)):
             if quoteId==sheet.cell(row=i+2,column=1).value:
                 sheet.cell(row=i+2,column=2).value+=1 
+            totalCount+=sheet.cell(row=i+2,column=2).value
+
         
         now=datetime.now()
-        print(now)
+        print(totalCount)
         # convert datetime obj to string
         current_datetime = str(now)
         fileName=current_datetime+'.xlsx'
-        # print(type(fileName))
-        wb2.save('Quotes Report_Res2.xlsx')   #it saves new count 
-        return randomQuote
+
+        # if totalCount==100:
+            # wb2.save(fileName)   #it saves file with date as name
+         
+        # else:
+    wb2.save('Quotes Report_Res2.xlsx')   #it saves new count 
+
+    return randomQuote
 
 #find quote if i have the id;
 def search_quote(id):
