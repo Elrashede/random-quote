@@ -35,13 +35,14 @@ def random_qoute():
         for i in range(len(qoute)):
             if quoteId==sheet.cell(row=i+2,column=1).value:
                 sheet.cell(row=i+2,column=2).value+=1 
-        # print(wb2) 
+        
         now=datetime.now()
         print(now)
         # convert datetime obj to string
-        # current_datetime = str(now)
-        # fileName=current_datetime+'.xlsx'
-        wb2.save('Quotes Report_Res2.xlsx')   #it saves only one if not change name after update 
+        current_datetime = str(now)
+        fileName=current_datetime+'.xlsx'
+        # print(type(fileName))
+        wb2.save('Quotes Report_Res2.xlsx')   #it saves new count 
         return randomQuote
 
 #find quote if i have the id;
@@ -77,7 +78,7 @@ def quote_details():
 
 # create Excel File and add column , run once       
 # def create_Excel():
-#     wb = load_workbook('Quotes Report_new.xlsx') 
+#     wb = load_workbook('Quotes Report_Res.xlsx') 
 #     sheets = wb.sheetnames
     
 #     sheet=wb[sheets[0]]
