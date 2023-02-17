@@ -44,13 +44,11 @@ def random_qoute():
         now=datetime.now()
         print(totalCount)
         # convert datetime obj to string
-        current_datetime = str(now)
-        fileName=current_datetime+'.xlsx'
-
-        # if totalCount==100:
-            # wb2.save(fileName)   #it saves file with date as name
-         
-        # else:
+        # current_datetime = str(now)
+        # print(str(now.year)+'_'+str(now.month)+'_'+str(now.day)+'_'+str(now.hour)+'_'+str(now.second))
+        if totalCount % 100 == 0:
+            wb2.save('quotes_api_report_'+str(now.year)+'_'+str(now.month)+'_'+str(now.day)+'_'+str(now.hour)+'_'+str(now.second)+'.xlsx')   #it saves file with datetime as name
+        
     wb2.save('Quotes Report_Res2.xlsx')   #it saves new count 
 
     return randomQuote
@@ -113,6 +111,8 @@ def quote_details():
 @app.route('/quote/random',methods=['GET'])
 def index():
     # create_Excel()
+
+    #add key auth header
     headers = request.headers
     auth = headers.get("X-Api-Key")
     if auth == 'SHEBAK@2022':
