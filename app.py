@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 import json
 import xlrd
 import xlwt
@@ -12,6 +12,7 @@ import datetime
 from datetime import datetime
 import win32com.client as win32
 from win32com.client import Dispatch
+
 
 app=Flask(__name__)
 CORS(app)
@@ -112,7 +113,15 @@ def quote_details():
 @app.route('/quote/random',methods=['GET'])
 def index():
     # create_Excel()
-    return quote_details()
+    headers = request.headers
+    auth = headers.get("X-Api-Key")
+    if auth == 'SHEBAK@2022':
+        return quote_details(), 200
+    else:
+        return {
+                  "message": "You are not authorized to use this API!"
+                }, 403
+    
 
 if __name__=="__main__":
     app.run(debug=True)
